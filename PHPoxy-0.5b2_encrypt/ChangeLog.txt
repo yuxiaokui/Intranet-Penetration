@@ -1,0 +1,108 @@
+* Release 0.5b2_encrypt August 24th, 2010 [NON OFFICIAL]
+_____________________________________________________________________
+
+- Added URLs encryption and signing using a disposable random key attached to session.
+
+
+* Release 0.5b2 January 20th, 2007
+_____________________________________________________________________
+
+- Moved hotlinking prevention further down in the code
+- upon_hotlink option 1 behavior changed to show the URL form using show_report() instead of a buggy HTTP redirect
+- Default value for upon_hotlink is now 1 (show URL form page w/ error) instead  of 2 (404 Error)
+- Fixed XSS vulnerbility in the address box in index.inc.php (Thanks Ryan from http://proxy.gd)
+- Removed .htaccess file because of "Internal Server Error" on several Apache installations
+- Fixed "prev_dir" in url_parse(). It didn't show the Website's address if there were no "previous dirs" (Thanks Rayan)
+
+
+* Release 0.5b January 19th, 2007
+_____________________________________________________________________
+
+- Reworked the script into a procedural programming code style instead of OO. Everything should be more streamlined and faster now.
+- Reworked extraction and processing of HTTP response headers. Doesn't depend on regex as much as before.
+- Flags are now encoded in base 16 instead of base 2.
+- Merged banned_hosts, allowed_hosts into one "hosts" array with each entry being a seperate regex piece of code.
+- Sped up HTML proxification decently by optimizing the regex
+- Introduced new system for showing errors, reports, and forms. It doesn't depend on HTTP redirects as in 0.4 and below.
+- Prevented more private networks from being allowed to be browsed through the proxy
+- Dropped the dependency on JavaScript for submitting the URL form
+- Entry form now uses POST instead of GET
+- Added support for inline CSS proxification
+- Added support for connections over SSL (requires PHP >= 4.3.0 and OpenSSL)
+- Added support for compressing output using Zlib
+- Added hotlinking protection, with options on what to do upon detecting hotlinking
+- Added support for flag freezing (i.e. users cannot change the value of frozen flags)
+- Added stripslashing for GPC for those with magic_quotes_gpc on
+- Added support for P3P and various other response headers
+- Fixed mini URL-form not being included on every HTML page
+- Fixed issues with POST data
+- Fixed the Host request header. The port is only added if necessary
+- Fixed Referer request header. It should reflect the actual referer now
+- Fixed max_file_size bug
+- Fixed the "script_url" variable. It should reflect the port if necessary and whether it's https or not 
+- Improved file upload support
+- Improved URL parsing. It's not perfect, but it's better than before.
+- Improved Basic authentication. It also now supports multiple realms per domain and different ports on the same domain
+- Improved the usability of URL forms
+- Improved cookie support
+- Improved URL error notifications
+- Improved removal of scripts
+- Improved handling of frames and iframes to not display URL forms. This is still extremely buggy however.
+- Various other fixes and speed improvements
+
+
+* Release 0.4 September 7th, 2005
+_____________________________________________________________________
+
+- Support for GET forms. Things like Google work now.
+- Complete overhaul of the URL modifying function. Now supports 
+  nearly all HTML tags
+- Support for CSS proxifying
+- New browsing options
+- New layout
+- Other fixes
+
+
+* Release 0.3 July 22nd, 2004
+_____________________________________________________________________
+
+- Script can now only work for PHP 4.2.0 and newer.
+- Support for HTTP file uploads.
+- Support for Basic HTTP authorization. Only one relam per domain is
+  currently supported.
+- $this->url_segments['prefix'] should be have been 
+  $this->url_segments['base'] in the follow_location method.
+- err_no and err_msg variables are now passed by value in fsockopen 
+  like they should've been.
+- mailto: links are now not proxified.
+- New helper method: stripslashes()
+- All files except HTML are now passed immediately to the user without
+  first being stored in the script.
+- Fixed problem with opening files if the path contained spaces.
+- Fixed cookies being passed with the response headers in addition to
+  the PHProxy cookies
+- Fixed problem if the URL started with a question mark.
+- New configurable variable: banned_hosts
+- A dot at the beginning of domain names in banned_hosts and
+  allowed_hosts matches all subdomains.
+
+
+* Release 0.2 June 22nd, 2004:
+_____________________________________________________________________
+
+- Fixed bug in set_post_body: $name should have been $parent_key
+- New logic for index.php
+- Updated some HTML and CSS
+- Changed xml to xhtml in public method: return_response() when checking 
+  if we should update the HTML
+- Added 7 gTLDs (.aero, .biz, .coop, .info, .museum, .name, .pro) for the regexp when
+  validating a cookie against a domain
+- Updated index.php, url_form.inc to be compatible with short_open_tag = Off
+- Anchors now work
+- Made the mini URL-form more user friendly
+
+
+* Release 0.1-alpha June 16th, 2004:
+_____________________________________________________________________
+
+Initial release.

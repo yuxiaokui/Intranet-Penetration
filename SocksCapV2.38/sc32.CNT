@@ -1,0 +1,30 @@
+:Base sc32.HLP>Main
+:Title SocksCap32
+1 欢迎使用 SocksCap=Welcome
+1 版权/许可条款和条件=Copyright_License_Terms_and_Conditions
+1 联系信息=Contact_Information
+1 Permeo 应用程序安全平台信息=Permeo_Application_Security_Platform_Information
+1 需求=Requirements
+1 安装=Installation
+1 使用 SocksCap
+2 在 SocksCap 控制下运行应用程序=Start_an_application_under_SocksCap_control
+2 注册一个应用程序标识项=Register_an_application_profile
+2 删除一个应用程序标识项=Delete_an_application_profile
+2 修改一个应用程序标识项=Modify_an_application_profile
+2 创建一个快捷方式=Create_a_Shortcut
+2 拖放=Drag_and_Drop
+2 更改控制台视图=Change_the_control_view
+2 启动 SocksCap 于系统栏=Starting_SocksCap_in_the_system_tray
+1 配置 SocksCap
+2 SOCKS 设置=SOCKS_Settings
+2 直接连接=Direct_Connections
+2 日志=Log
+2 导出设置=Export_Settings
+2 导入设置=Import_Settings
+2 用户名/密码=Username_Password
+1 信息
+2 SOCKS 是什么?=What_is_SOCKS?
+2 SOCKS 版本 4 和 SOCKS 版本 5 协议=SOCKS_Version_4_and_SOCKS_Version_5_Protocols
+2 域名解析=Name_Resolution
+2 环境变量=Environment_Variables
+2 可能的问题=Possible_Problems

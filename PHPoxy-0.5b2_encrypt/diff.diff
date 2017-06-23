@@ -1,0 +1,154 @@
+--- index.php	Sat Jan 20 17:06:02 2007
++++ index.php.modified	Wed Aug 25 10:40:13 2010
+@@ -22,7 +22,116 @@
+    +------------------------------------------------------------------------------+
+ */
+ 
+-error_reporting(E_ALL);
++//error_reporting(E_ALL);
++
++// ---SSE start
++// PHProxy 0.5b2 (5:27 PM 1/20/2007) modified by Sébastien SAUVAGE on 2010-08-24
++// 
++// This modification signs and encrypts the URLs using a random key
++// attached to the session cookie.
++// NOTE: This is a quick hack: It's not well integrated in the original source code.
++//       (TODO: make URL encryption an option of the proxy)
++// 
++// Advantages:
++// - Browser history is useless: As soon as the browser is closed, the session
++//   cookie is lost and URLs cannot be decrypted anymore.
++// - The admin of an intermediate proxy can't see the visited URLs (they are encrypted).
++// - If the admin copy/pastes the URLs he sees in his proxy logs in his browser,
++//   he will only get an error message (because he does not have your session cookie
++//   and the URLs are signed.)
++//
++// Keep in mind that this does not protect against:
++// - Network sniffing.
++// - Examination of proxy and browser cache.
++//
++//
++// How it works:
++// - When the user first calls the proxy, a session is created for this user (using a session cookie)
++// - A random 160 bits key is generated and stored on server side, attached to this session.
++// - All URLs sent to client are signed (HMAC sha1) and encrypted with this key.
++// - The key is never sent on the wire (it's kept on the server side)
++// - The key is different each time you close and reopen your browser.
++// - Please note that encryption is weak (XOT between key and URL), but sufficient for most cases.
++//
++// URL example: http://www.google.fr/
++// http://myhost.com/poxy/index.php?rrr=206c6a2f850eed82f0f1f31abd0391b434fba48aX0ZFQ14YFkJCRhgBCQlTWlJNBxcX&hl=3ef
++//                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   
++//                                      sha1 (URL signature)                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++//                                                                              Encrypted URL
++//
++// If any client calls the URL without the corresponding session cookie, the proxy will reject the request.
++// Please note that you must use the base64 url encoding, otherwise the URLs are not encrypted and signed.
++//
++// This script works with php4.
++
++// Calculate HMAC-SHA1 according to RFC2104
++// http://www.ietf.org/rfc/rfc2104.txt
++function hmacsha1($key,$data) {
++    $blocksize=64;
++    $hashfunc='sha1';
++    if (strlen($key)>$blocksize) $key=pack('H*', $hashfunc($key));
++    $key=str_pad($key,$blocksize,chr(0x00));
++    $ipad=str_repeat(chr(0x36),$blocksize);
++    $opad=str_repeat(chr(0x5c),$blocksize);
++    $hmac = pack('H*',$hashfunc(($key^$opad).pack('H*',$hashfunc(($key^$ipad).$data))));
++    return bin2hex($hmac);
++}
++
++// Simple XOR encryption taken from:
++// http://www.jonasjohn.de/snippets/php/xor-encryption.htm
++/**
++ * XOR encrypts a given string with a given key phrase.
++ *
++ * @param     string    $InputString    Input string
++ * @param     string    $KeyPhrase      Key phrase
++ * @return    string    Encrypted string    
++ */    
++function XOREncryption($InputString, $KeyPhrase){
++ 
++    $KeyPhraseLength = strlen($KeyPhrase);
++ 
++    // Loop trough input string
++    for ($i = 0; $i < strlen($InputString); $i++){
++ 
++        // Get key phrase character position
++        $rPos = $i % $KeyPhraseLength;
++ 
++        // Magic happens here:
++        $r = ord($InputString[$i]) ^ ord($KeyPhrase[$rPos]);
++ 
++        // Replace characters
++        $InputString[$i] = chr($r);
++    }
++ 
++    return $InputString;
++}
++ 
++// Helper functions, using base64 to
++// create readable encrypted texts:
++ 
++function XOREncrypt64($InputString, $KeyPhrase){
++    $InputString = XOREncryption($InputString, $KeyPhrase);
++    $InputString = base64_encode($InputString);
++    return $InputString;
++}
++ 
++function XORDecrypt64($InputString, $KeyPhrase){
++    $InputString = base64_decode($InputString);
++    $InputString = XOREncryption($InputString, $KeyPhrase);
++    return $InputString;
++}
++
++session_name('prx');
++session_start(); 
++
++
++if(!isset($_SESSION['randomkey'])) 
++{
++  // No key stored in session, let's generate a random one.
++  $_SESSION['randomkey'] = sha1(uniqid('',true).'_'.mt_rand());
++}
++
++// ---SSE end
+ 
+ //
+ // CONFIGURABLE OPTIONS
+@@ -366,11 +475,31 @@
+ {
+     function encode_url($url)
+     {
+-        return rawurlencode(base64_encode($url));
++// --- SSE start
++//        return rawurlencode(base64_encode($url));
++        // We add the HMAC of the URL in front of the URL. (sha1 is 40 bytes in hex)
++        $encrypted_url = XOREncrypt64($url,$_SESSION['randomkey']);
++        $hmac = hmacsha1( $_SESSION['randomkey'], $encrypted_url);
++        return rawurlencode($hmac.$encrypted_url);
++
+     }
+     function decode_url($url)
+     {
+-        return str_replace(array('&amp;', '&#38;'), '&', base64_decode(rawurldecode($url)));
++//        return str_replace(array('&amp;', '&#38;'), '&', base64_decode(rawurldecode($url)));
++        // We extract the SHA1 and the URL.
++        $s = rawurldecode($url);
++        $hmac = substr($s,0,40);
++        $encrypted_url = substr($s,40,strlen($s)-40);
++        // Make sure hmac is correct
++        if ($hmac!=hmacsha1( $_SESSION['randomkey'], $encrypted_url)) 
++        { 
++            echo "Wrong hmac."; exit; // Violent, but effective.
++        };
++        // Decrypt the URL:
++        $cleartext_url = XORDecrypt64($encrypted_url,$_SESSION['randomkey']);
++        return str_replace(array('&amp;', '&#38;'), '&', $cleartext_url);
++// --- SSE end
++
+     }
+ }
+ else
