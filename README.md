@@ -37,5 +37,6 @@ Intranet Penetration
 
 17、wget     win版wget
 
+18、get.7z  get64.7z  mimikatz无交互版 直接shell下运行 get.7z    (不是压缩文件)
 
 如有补充请联系QQ：48011203 
