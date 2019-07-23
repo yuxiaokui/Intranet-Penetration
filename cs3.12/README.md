@@ -1,9 +1,9 @@
-·şÎñÆ÷ÉÏ²¿Êğteamserver:
+æœåŠ¡å™¨ä¸Šéƒ¨ç½²teamserver:
 
-docker run -d -e PASSWD=cspass -p 50050:50050 -p 3389:3389 xi4okv/cs:3.12
+docker run -d -e PASSWD=cspass -p 50050:50050 -p 3389:3389 xi4okv/cs:3.12   æ·»åŠ 3.14ç‰ˆæœ¬çš„é•œåƒ
 
-50050 CS¿Í»§¶ËÁ¬½Ó¶Ë¿Ú
+50050 CSå®¢æˆ·ç«¯è¿æ¥ç«¯å£
 
-ÔÙ¿ª·Å¼¸¸ö¶Ë¿Ú×÷Îªlistener
+å†å¼€æ”¾å‡ ä¸ªç«¯å£ä½œä¸ºlistener
 
-cspassÊÇ¿Í»§¶ËÁ¬½ÓÃÜÂë¡£
+cspassæ˜¯å®¢æˆ·ç«¯è¿æ¥å¯†ç ã€‚
