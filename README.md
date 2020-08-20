@@ -39,6 +39,8 @@ get.7z  get64.7z  mimikatz无交互版 直接shell下运行 get.7z    (不是压
 
 ### 常用命令
 
+[![Join the chat at https://gitter.im/Intranet-Penetration/community](https://badges.gitter.im/Intranet-Penetration/community.svg)](https://gitter.im/Intranet-Penetration/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 1、开web
 
 python2 -m SimpleHTTPServer python3 -m http.server
